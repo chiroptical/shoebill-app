@@ -2,6 +2,7 @@ plugins {
     kotlin("multiplatform") version "1.7.21"
     application
     idea
+    id("com.google.devtools.ksp") version "1.7.21-1.0.8"
 }
 
 group = "app.shoebill"
@@ -11,6 +12,8 @@ repositories {
     mavenCentral()
     maven("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
 }
+
+val arrowVersion = "1.1.2"
 
 kotlin {
     jvm {
@@ -27,7 +30,12 @@ kotlin {
         browser {}
     }
     sourceSets {
-        val commonMain by getting
+        val commonMain by getting {
+            dependencies {
+                // implementation("io.arrow-kt:arrow-core:$arrowVersion")
+                implementation("io.arrow-kt:arrow-optics:$arrowVersion")
+            }
+        }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
@@ -64,4 +72,8 @@ tasks.named<Copy>("jvmProcessResources") {
 tasks.named<JavaExec>("run") {
     dependsOn(tasks.named<Jar>("jvmJar"))
     classpath(tasks.named<Jar>("jvmJar"))
+}
+
+dependencies {
+    // add("kspCommonMainMetadata", project("io.arrow-kt:arrow-optics-ksp-plugin:$arrowVersion"))
 }

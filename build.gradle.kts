@@ -1,13 +1,13 @@
 plugins {
     kotlin("multiplatform") version "1.7.21"
     application
+    idea
 }
 
 group = "app.shoebill"
 version = "0.1"
 
 repositories {
-    jcenter()
     mavenCentral()
     maven("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
 }
@@ -24,11 +24,7 @@ kotlin {
     }
     js(LEGACY) {
         binaries.executable()
-        browser {
-            commonWebpackConfig {
-                cssSupport.enabled = true
-            }
-        }
+        browser {}
     }
     sourceSets {
         val commonMain by getting

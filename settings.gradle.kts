@@ -1,3 +1,1 @@
-
 rootProject.name = "shoebill-app"
-

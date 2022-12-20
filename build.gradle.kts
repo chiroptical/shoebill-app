@@ -32,8 +32,6 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                // implementation("io.arrow-kt:arrow-core:$arrowVersion")
-                implementation("io.arrow-kt:arrow-optics:$arrowVersion")
             }
         }
         val commonTest by getting {
@@ -75,5 +73,17 @@ tasks.named<JavaExec>("run") {
 }
 
 dependencies {
-    // add("kspCommonMainMetadata", project("io.arrow-kt:arrow-optics-ksp-plugin:$arrowVersion"))
+    implementation("io.arrow-kt:arrow-core:$arrowVersion")
+    implementation("io.arrow-kt:arrow-optics:$arrowVersion")
+    add("kspCommonMainMetadata", "io.arrow-kt:arrow-optics-ksp-plugin:$arrowVersion")
 }
+
+// Took this from https://kotlinlang.org/docs/ksp-quickstart.html#make-ide-aware-of-generated-code
+//idea {
+//    module {
+//        // Not using += due to https://github.com/gradle/gradle/issues/8749
+//        sourceDirs = sourceDirs + file("build/generated/ksp/main/kotlin") // or tasks["kspKotlin"].destination
+//        testSourceDirs = testSourceDirs + file("build/generated/ksp/test/kotlin")
+//        generatedSourceDirs = generatedSourceDirs + file("build/generated/ksp/main/kotlin") + file("build/generated/ksp/test/kotlin")
+//    }
+//}

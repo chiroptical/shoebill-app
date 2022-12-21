@@ -1,8 +1,8 @@
 plugins {
-    kotlin("multiplatform") version "1.7.21"
+    kotlin("multiplatform") version "1.7.22"
     application
     idea
-    id("com.google.devtools.ksp") version "1.7.21-1.0.8"
+    id("com.google.devtools.ksp") version "1.7.22-1.0.8"
 }
 
 group = "app.shoebill"
@@ -13,7 +13,11 @@ repositories {
     maven("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
 }
 
-val arrowVersion = "1.1.2"
+val arrowVersion = "1.1.4-rc.2"
+
+dependencies {
+    add("kspCommonMainMetadata", "io.arrow-kt:arrow-optics-ksp-plugin:$arrowVersion")
+}
 
 kotlin {
     jvm {
@@ -25,13 +29,16 @@ kotlin {
             useJUnitPlatform()
         }
     }
-    js(LEGACY) {
-        binaries.executable()
-        browser {}
+    js(IR) {
+        // binaries.executable()
+        browser()
+        nodejs()
     }
     sourceSets {
         val commonMain by getting {
             dependencies {
+                implementation("io.arrow-kt:arrow-core:$arrowVersion")
+                implementation("io.arrow-kt:arrow-optics:$arrowVersion")
             }
         }
         val commonTest by getting {
@@ -62,20 +69,15 @@ application {
     mainClass.set("app.shoebill.application.ServerKt")
 }
 
-tasks.named<Copy>("jvmProcessResources") {
-    val jsBrowserDistribution = tasks.named("jsBrowserDistribution")
-    from(jsBrowserDistribution)
-}
+// Using `nodejs()` in `js(IR)` block above
+// tasks.named<Copy>("jvmProcessResources") {
+//     val jsBrowserDistribution = tasks.named("jsBrowserDistribution")
+//     from(jsBrowserDistribution)
+// }
 
 tasks.named<JavaExec>("run") {
     dependsOn(tasks.named<Jar>("jvmJar"))
     classpath(tasks.named<Jar>("jvmJar"))
-}
-
-dependencies {
-    implementation("io.arrow-kt:arrow-core:$arrowVersion")
-    implementation("io.arrow-kt:arrow-optics:$arrowVersion")
-    add("kspCommonMainMetadata", "io.arrow-kt:arrow-optics-ksp-plugin:$arrowVersion")
 }
 
 // Took this from https://kotlinlang.org/docs/ksp-quickstart.html#make-ide-aware-of-generated-code

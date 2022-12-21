@@ -13,11 +13,13 @@ repositories {
     maven("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
 }
 
-val arrowVersion = "1.1.4-rc.2"
+val arrowVersion = "1.1.4-rc.3"
 
 dependencies {
     add("kspCommonMainMetadata", "io.arrow-kt:arrow-optics-ksp-plugin:$arrowVersion")
 }
+
+fun makeKspDir(name: String) = file("build/generated/ksp/metadata/$name/kotlin")
 
 kotlin {
     jvm {
@@ -37,6 +39,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
+                kotlin.srcDir(makeKspDir("commonMain"))
                 implementation("io.arrow-kt:arrow-core:$arrowVersion")
                 implementation("io.arrow-kt:arrow-optics:$arrowVersion")
             }
@@ -79,13 +82,3 @@ tasks.named<JavaExec>("run") {
     dependsOn(tasks.named<Jar>("jvmJar"))
     classpath(tasks.named<Jar>("jvmJar"))
 }
-
-// Took this from https://kotlinlang.org/docs/ksp-quickstart.html#make-ide-aware-of-generated-code
-//idea {
-//    module {
-//        // Not using += due to https://github.com/gradle/gradle/issues/8749
-//        sourceDirs = sourceDirs + file("build/generated/ksp/main/kotlin") // or tasks["kspKotlin"].destination
-//        testSourceDirs = testSourceDirs + file("build/generated/ksp/test/kotlin")
-//        generatedSourceDirs = generatedSourceDirs + file("build/generated/ksp/main/kotlin") + file("build/generated/ksp/test/kotlin")
-//    }
-//}

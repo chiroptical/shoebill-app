@@ -32,7 +32,6 @@ kotlin {
         }
     }
     js(IR) {
-        // binaries.executable()
         browser()
         nodejs()
     }
@@ -71,12 +70,6 @@ kotlin {
 application {
     mainClass.set("app.shoebill.application.ServerKt")
 }
-
-// Using `nodejs()` in `js(IR)` block above
-// tasks.named<Copy>("jvmProcessResources") {
-//     val jsBrowserDistribution = tasks.named("jsBrowserDistribution")
-//     from(jsBrowserDistribution)
-// }
 
 tasks.named<JavaExec>("run") {
     dependsOn(tasks.named<Jar>("jvmJar"))
